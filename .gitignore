@@ -1,12 +1,1 @@
-# Node modules
-node_modules/
-
-# Environment variables
-.env
-
-# Logs
-logs
-*.log
-
-# Debugger
-.vscode/
+node_modules

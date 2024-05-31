@@ -1,14 +1,13 @@
-const express = require('express');
+const { Router } = require('express')
+const mainController = require('./controllers/mainController')
 
-// on importe nos controllers
-const mainController = require('./controllers/mainController');
+const router = Router();
 
 
-const router = express.Router();
-
-// page d'accueil
 router.get('/', mainController.homePage);
-router.get('/filter/arrondissement', mainController.filterView);
 
-// on exporte le router 
-module.exports = router;
+router.get('/search', mainController.searchPage);
+
+router.get('/:id', mainController.detailsPage)
+
+module.exports = router

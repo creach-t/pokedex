@@ -1,33 +1,41 @@
-const api = require('../dataMapper/api');
+const pokedex = require('../../public/data/pokedex.json');
 
 const mainController = {
-    // méthode pour la page d'accueil
-   async homePage(req, res) {
-    try {
-        const data = await api.getAllArrondissements();
+  homePage(req, res) {
 
-        res.render('index',{
-            data,
-        } );
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des arrondissements");
+    res.render('index', { pokedex: req.pokedex });
+  },
+
+  searchPage(req, res) {
+    const searchedText = req.query.searchedText ? req.query.searchedText.toLowerCase() : '';
+
+    const pokemonsFound = req.pokedex.filter(pokemon => {
+      if (!searchedText) {
+        return true;
       }
-    },
 
-    async filterView(req, res) {
-        const arrondissement = req.query.zipcode;
-        try {
-            const data = await api.getAllByArrondissement(arrondissement);
-            res.render('filterView',{
-                arrondissement,
-                data,
-            } );
-        } catch (error) {
-            console.error(error);
-            res.status(500).send("Erreur lors de la récupération des sanisettes par arrondissement");
-          }
-        },
+      return pokemon.name.fr.toLowerCase().includes(searchedText) ||
+             pokemon.name.en.toLowerCase().includes(searchedText);
+    });
+
+    res.render('search', {
+      searchedText,
+      pokemonsFound
+    });
+  },
+
+  detailsPage(req,res) {
+    const pokemonId = parseInt(req.params.id);
+ 
+    const pokemonFound = pokedex.find(pokemon => {
+      return pokemon.pokedex_id === pokemonId;
+    })
+  
+    res.render('details',{
+      pokemonId,
+      pokemonFound
+    })
+  }
 
 };
 
